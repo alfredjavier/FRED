@@ -1,0 +1,20 @@
+@use "../util/" as u;
+
+.wrapper {
+  width: min(calc(100% - 2.5rem), 73.75rem); // 40px and 1180px in rem
+  margin-inline: auto;
+  padding-block: 1.875rem; // 30px
+
+  @include u.breakpoint(large) {
+    padding-block: 3.75rem; // 60px
+  }
+
+  .section-grid {
+    display: grid;
+    gap: 1.875rem; // 30px
+
+    @include u.breakpoint(large) {
+      gap: 2.5rem; // 40px
+    }
+  }
+}

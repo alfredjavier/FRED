@@ -1,0 +1,46 @@
+@use "../util/" as u;
+
+.contact {
+  // Base styles (if any) can go here
+
+  @include u.breakpoint(medium) {
+    display: grid;
+    justify-items: center;
+  }
+
+  &__links {
+    display: grid;
+    gap: u.rem(16);
+    margin: 0;
+    padding: 0;
+  }
+
+  &__item {
+    list-style: none;
+  }
+
+  &__link {
+    color: var(--color-text);
+    font-weight: 700;
+    font-size: u.rem(18);
+    display: grid;
+    grid-template-columns: u.rem(24) auto;
+    gap: u.rem(20);
+    align-items: center;
+    transition: color 150ms ease-in-out;
+
+    &:hover {
+      color: var(--color-accent);
+
+      svg path {
+        fill: var(--color-accent);
+      }
+    }
+  }
+
+  &__icon {
+    svg path {
+      transition: fill 150ms ease-in-out;
+    }
+  }
+}

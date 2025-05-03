@@ -1,0 +1,41 @@
+@use "../util/" as u;
+
+.hero {
+  display: grid;
+  align-items: center;
+  gap: 30px;
+
+  @include u.breakpoint(medium) {
+    grid-template-columns: 1fr; // Single column layout for medium screens
+  }
+
+  @include u.breakpoint(large) {
+    grid-template-columns: 3fr 2fr; // Two-column layout for large screens
+  }
+
+  &__wrapper {
+    padding-block-start: 20px;
+
+    @include u.breakpoint(large) {
+      padding-block-start: 40px;
+    }
+  }
+
+  &__text {
+    p:last-child {
+      margin-block-end: 0;
+    }
+  }
+
+  &__image {
+    max-width: u.rem(460);
+    img {
+      border-radius: 20px;
+      width: 100%; // Ensure image takes full width of its container
+      object-fit: cover; // Maintain aspect ratio without distortion
+      &:hover {
+        transform: translateY(-5px);
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+.button {
+  font-size: 0.875rem;
+  font-weight: 700;
+  border-radius: 60px;
+  padding: 12px 24px;
+  border: 3px solid var(--color-accent);
+}
+@media (width >= 75em) {
+  .button {
+    font-size: 1rem;
+  }
+}
+.button.primary {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+.button.secondary {
+  color: var(--color-accent);
+}
+
+/*# sourceMappingURL=button.css.map */

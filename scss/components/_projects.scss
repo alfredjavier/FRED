@@ -1,0 +1,28 @@
+@use "../util/" as u;
+
+.projects {
+  &__item {
+    display: grid;
+    padding-top: 20px; // modified by Fred
+    gap: 16px; // modified by Fred
+
+    @include u.breakpoint(medium) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 40px;
+      align-items: center;
+    }
+  }
+
+  &__image {
+    border-radius: 12px;
+  }
+
+  // &__text {
+  //   // Add text styles here if needed
+  // }
+
+  &__buttons {
+    display: flex;
+    gap: 20px;
+  }
+}

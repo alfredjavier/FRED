@@ -1,0 +1,48 @@
+@use "../util/" as u;
+
+.services {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  justify-content: center;
+
+  .service-box {
+    display: flex;
+    flex-direction: column; // Stack icon and text vertically if preferred
+    align-items: center; // Center items horizontally within the box
+    text-align: center;   // Center text
+    gap: 1rem;
+    padding: 9px 24px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    transition: background 150ms ease-in-out, border 150ms ease-in-out, color 150ms ease-in-out;
+    min-height: 160px;
+    border: 3px solid var(--color-accent);
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--color-light);
+      text-transform: uppercase;
+    }
+
+    p {
+      margin-top: 0.3rem;
+      font-size: 0.9rem;
+      color: var(--color-light);
+    }
+  }
+}

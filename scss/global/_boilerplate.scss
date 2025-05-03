@@ -1,0 +1,27 @@
+/* Reset styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Body styles */
+body {
+  margin: 0;
+  margin-block-end: 50vh; /* temp style */
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
+}
+
+/* Image styles */
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Link styles */
+a {
+  text-decoration: none;
+}
