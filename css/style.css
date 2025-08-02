@@ -491,6 +491,16 @@ p.small {
   font-size: 0.9rem;
   color: var(--color-light);
 }
+@media (max-width: 600px) {
+  .services {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+  .services .service-box {
+    padding: 1rem;
+  }
+}
 
 .skillss {
   justify-items: center;
