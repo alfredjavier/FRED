@@ -489,32 +489,131 @@
         </ul>
       </section>
     </main>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="back-to-top" aria-label="Scroll down">
+      <i class="fas fa-arrow-down" id="scroll-icon"></i>
+    </button>
   </body>
 </html>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
+    // Dynamic Scroll Button functionality
+    const backToTopBtn = document.getElementById('back-to-top');
+    const scrollIcon = document.getElementById('scroll-icon');
+    let ticking = false;
+
+    // Throttled scroll function for better performance
+    function requestTick() {
+      if (!ticking) {
+        requestAnimationFrame(updateScrollButton);
+        ticking = true;
+      }
+    }
+
+    // Function to update arrow based on scroll position
+    function updateScrollButton() {
+      const scrollTop = window.pageYOffset;
+      const documentHeight = document.documentElement.scrollHeight;
+      const windowHeight = window.innerHeight;
+      const scrollPercent = (scrollTop / (documentHeight - windowHeight)) * 100;
+      
+      let newDirection;
+      
+      // Change arrow direction based on scroll position
+      if (scrollPercent > 10) {
+        newDirection = 'up';
+        scrollIcon.className = 'fas fa-arrow-up';
+        backToTopBtn.setAttribute('aria-label', 'Back to top');
+      } else {
+        newDirection = 'down';
+        scrollIcon.className = 'fas fa-arrow-down';
+        backToTopBtn.setAttribute('aria-label', 'Scroll down');
+      }
+
+      // Add animation when direction changes
+      if (backToTopBtn.dataset.direction !== newDirection) {
+        backToTopBtn.classList.add('changing');
+        setTimeout(() => {
+          backToTopBtn.classList.remove('changing');
+        }, 500);
+        backToTopBtn.dataset.direction = newDirection;
+      }
+
+      ticking = false;
+    }
+
+    // Initial check on page load
+    updateScrollButton();
+
+    // Use throttled scroll event for better performance
+    window.addEventListener('scroll', requestTick, { passive: true });
+
+    // Handle button click - scroll to top or bottom based on current position
+    backToTopBtn.addEventListener('click', () => {
+      const scrollTop = window.pageYOffset;
+      const documentHeight = document.documentElement.scrollHeight;
+      const scrollDuration = Math.min(Math.max(scrollTop / 3, 400), 1200);
+      
+      if (scrollTop > 100) {
+        // Scroll to top
+        smoothScrollTo(0, scrollDuration);
+      } else {
+        // Scroll to bottom
+        smoothScrollTo(documentHeight, scrollDuration);
+      }
+    });
+
+    // Custom smooth scroll function
+    function smoothScrollTo(targetPosition, duration) {
+      const startPosition = window.pageYOffset;
+      const distance = targetPosition - startPosition;
+      const startTime = performance.now();
+
+      function animation(currentTime) {
+        const timeElapsed = currentTime - startTime;
+        const progress = Math.min(timeElapsed / duration, 1);
+        
+        // Easing function for smooth animation
+        const easeInOutCubic = progress < 0.5 
+          ? 4 * progress * progress * progress 
+          : (progress - 1) * (2 * progress - 2) * (2 * progress - 2) + 1;
+        
+        window.scrollTo(0, startPosition + distance * easeInOutCubic);
+        
+        if (progress < 1) {
+          requestAnimationFrame(animation);
+        }
+      }
+      
+      requestAnimationFrame(animation);
+    }
+
+    // Existing popup functionality
     const popup = document.querySelector(".popup");
     const popupImg = document.querySelector(".popup__img");
     const closeBtn = document.querySelector(".popup__close");
 
-    document.querySelectorAll(".popup-image").forEach((img) => {
-      img.addEventListener("click", () => {
-        popup.style.display = "flex";
-        popupImg.src = img.src;
-        popupImg.alt = img.alt;
+    if (popup && popupImg && closeBtn) {
+      document.querySelectorAll(".popup-image").forEach((img) => {
+        img.addEventListener("click", () => {
+          popup.style.display = "flex";
+          popupImg.src = img.src;
+          popupImg.alt = img.alt;
+        });
       });
-    });
 
-    closeBtn.addEventListener("click", () => {
-      popup.style.display = "none";
-    });
-
-    // Optional: click outside image to close
-    popup.addEventListener("click", (e) => {
-      if (e.target === popup) {
+      closeBtn.addEventListener("click", () => {
         popup.style.display = "none";
-      }
-    });
+      });
+
+      // Optional: click outside image to close
+      popup.addEventListener("click", (e) => {
+        if (e.target === popup) {
+          popup.style.display = "none";
+        }
+      });
+    }
   });
 </script>
