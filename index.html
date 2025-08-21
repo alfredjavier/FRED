@@ -444,122 +444,82 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    // Dynamic Scroll Button functionality
     const backToTopBtn = document.getElementById("back-to-top");
     const scrollIcon = document.getElementById("scroll-icon");
-    let ticking = false;
+    let isScrolling = false;
+    let lastScrollTop = 0;
+    let scrollTimeout;
 
-    // Throttled scroll function for better performance
-    function requestTick() {
-      if (!ticking) {
-        requestAnimationFrame(updateScrollButton);
-        ticking = true;
-      }
+    // Throttle scroll events for better performance
+    function throttle(callback, limit) {
+      let waiting = false;
+      return function () {
+        if (!waiting) {
+          callback.apply(this, arguments);
+          waiting = true;
+          setTimeout(() => {
+            waiting = false;
+          }, limit);
+        }
+      };
     }
 
-    // Function to update arrow based on scroll position
-    function updateScrollButton() {
-      const scrollTop = window.pageYOffset;
-      const documentHeight = document.documentElement.scrollHeight;
+    // Toggle button visibility and update icon based on scroll position
+    function toggleBackToTop() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       const windowHeight = window.innerHeight;
-      const scrollPercent = (scrollTop / (documentHeight - windowHeight)) * 100;
-
-      let newDirection;
-
-      // Change arrow direction based on scroll position
-      if (scrollPercent > 10) {
-        newDirection = "up";
-        scrollIcon.className = "fas fa-arrow-up";
-        backToTopBtn.setAttribute("aria-label", "Back to top");
-      } else {
-        newDirection = "down";
-        scrollIcon.className = "fas fa-arrow-down";
-        backToTopBtn.setAttribute("aria-label", "Scroll down");
-      }
-
-      // Add animation when direction changes
-      if (backToTopBtn.dataset.direction !== newDirection) {
-        backToTopBtn.classList.add("changing");
-        setTimeout(() => {
-          backToTopBtn.classList.remove("changing");
-        }, 500);
-        backToTopBtn.dataset.direction = newDirection;
-      }
-
-      ticking = false;
-    }
-
-    // Initial check on page load
-    updateScrollButton();
-
-    // Use throttled scroll event for better performance
-    window.addEventListener("scroll", requestTick, { passive: true });
-
-    // Handle button click - scroll to top or bottom based on current position
-    backToTopBtn.addEventListener("click", () => {
-      const scrollTop = window.pageYOffset;
       const documentHeight = document.documentElement.scrollHeight;
-      const scrollDuration = Math.min(Math.max(scrollTop / 3, 400), 1200);
+      const isNearBottom = scrollTop + windowHeight >= documentHeight - 100;
 
-      if (scrollTop > 100) {
-        // Scroll to top
-        smoothScrollTo(0, scrollDuration);
+      // Show/hide button
+      if (scrollTop > 300) {
+        backToTopBtn.classList.add("visible");
       } else {
-        // Scroll to bottom
-        smoothScrollTo(documentHeight, scrollDuration);
-      }
-    });
-
-    // Custom smooth scroll function
-    function smoothScrollTo(targetPosition, duration) {
-      const startPosition = window.pageYOffset;
-      const distance = targetPosition - startPosition;
-      const startTime = performance.now();
-
-      function animation(currentTime) {
-        const timeElapsed = currentTime - startTime;
-        const progress = Math.min(timeElapsed / duration, 1);
-
-        // Easing function for smooth animation
-        const easeInOutCubic =
-          progress < 0.5
-            ? 4 * progress * progress * progress
-            : (progress - 1) * (2 * progress - 2) * (2 * progress - 2) + 1;
-
-        window.scrollTo(0, startPosition + distance * easeInOutCubic);
-
-        if (progress < 1) {
-          requestAnimationFrame(animation);
-        }
+        backToTopBtn.classList.remove("visible");
       }
 
-      requestAnimationFrame(animation);
+      // Update icon based on scroll position
+      if (isNearBottom) {
+        // If near bottom, show up arrow (to go to top)
+        scrollIcon.className = "fas fa-arrow-up";
+      } else {
+        // If not near bottom, show down arrow (to go to bottom)
+        scrollIcon.className = "fas fa-arrow-down";
+      }
+      
+      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
     }
 
-    // Existing popup functionality
-    const popup = document.querySelector(".popup");
-    const popupImg = document.querySelector(".popup__img");
-    const closeBtn = document.querySelector(".popup__close");
+    // Smooth scroll to top or bottom
+    function handleBackToTopClick() {
+      const scrollTop =
+        window.pageYOffset || document.documentElement.scrollTop;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
 
-    if (popup && popupImg && closeBtn) {
-      document.querySelectorAll(".popup-image").forEach((img) => {
-        img.addEventListener("click", () => {
-          popup.style.display = "flex";
-          popupImg.src = img.src;
-          popupImg.alt = img.alt;
+      // If we're near the bottom, scroll to top; otherwise scroll to bottom
+      if (scrollTop + windowHeight >= documentHeight - 100) {
+        // Near bottom, scroll to top
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
         });
-      });
-
-      closeBtn.addEventListener("click", () => {
-        popup.style.display = "none";
-      });
-
-      // Optional: click outside image to close
-      popup.addEventListener("click", (e) => {
-        if (e.target === popup) {
-          popup.style.display = "none";
-        }
-      });
+        scrollIcon.className = "fas fa-arrow-up";
+      } else {
+        // Not near bottom, scroll to bottom
+        window.scrollTo({
+          top: documentHeight,
+          behavior: "smooth",
+        });
+        scrollIcon.className = "fas fa-arrow-down";
+      }
     }
+
+    // Add event listeners
+    window.addEventListener("scroll", throttle(toggleBackToTop, 100));
+    backToTopBtn.addEventListener("click", handleBackToTopClick);
+
+    // Initial check
+    toggleBackToTop();
   });
 </script>
