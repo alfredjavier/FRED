@@ -71,8 +71,10 @@
           <div class="skills__tag">Figma</div>
           <div class="skills__tag">Gutenberg</div>
           <div class="skills__tag">Shopify</div>
+          <div class="skills__tag">Divi</div>
           <div class="skills__tag">Photoshop</div>
           <div class="skills__tag">Block Theme</div>
+          <div class="skills__tag">Gutenberg</div>
           <div class="skills__tag">Custom Theme</div>
           <div class="skills__tag">SEO</div>
           <div class="skills__tag">Wix</div>
@@ -466,7 +468,8 @@
 
     // Toggle button visibility and update icon based on scroll position
     function toggleBackToTop() {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollTop =
+        window.pageYOffset || document.documentElement.scrollTop;
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
       const isNearBottom = scrollTop + windowHeight >= documentHeight - 100;
@@ -486,7 +489,7 @@
         // If not near bottom, show down arrow (to go to bottom)
         scrollIcon.className = "fas fa-arrow-down";
       }
-      
+
       lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
     }
 
